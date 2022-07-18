@@ -56,4 +56,9 @@ func _ready() -> void:
 func play_turn() -> void:
 	yield(active_character.play_turn(), "completed")
 	var new_index : int = (active_character.get_index() + 1) % $Creatures.get_child_count()
+	print(new_index)
 	active_character = $Creatures.get_child(new_index)
+
+func _process(delta) -> void:
+	play_turn()
+	yield(play_turn(), "completed")
