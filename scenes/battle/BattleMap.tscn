@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/battle/BattleMap.gd" type="Script" id=1]
+
+[node name="BattleMap" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Creatures" type="Node2D" parent="."]
+
+[node name="AlliesPos" type="Node2D" parent="."]
+
+[node name="AllyPosition1" type="Position2D" parent="AlliesPos"]
+position = Vector2( -96, 0 )
+
+[node name="AllyPosition2" type="Position2D" parent="AlliesPos"]
+position = Vector2( -64, 32 )
+
+[node name="AllyPosition3" type="Position2D" parent="AlliesPos"]
+position = Vector2( -64, -32 )
+
+[node name="AllyPosition4" type="Position2D" parent="AlliesPos"]
+position = Vector2( -32, 0 )
+
+[node name="EnemiesPos" type="Node2D" parent="."]
+
+[node name="EnemyPosition1" type="Position2D" parent="EnemiesPos"]
+position = Vector2( 96, 0 )
+
+[node name="EnemyPosition2" type="Position2D" parent="EnemiesPos"]
+position = Vector2( 64, 32 )
+
+[node name="EnemyPosition3" type="Position2D" parent="EnemiesPos"]
+position = Vector2( 64, -32 )
+
+[node name="EnemyPosition4" type="Position2D" parent="EnemiesPos"]
+position = Vector2( 32, 0 )
