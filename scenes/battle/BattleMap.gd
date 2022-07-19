@@ -6,7 +6,8 @@ const SKELETON_SCENE: PackedScene = preload("res://scenes/characters/Skeleton.ts
 const PLAYER_SCENE: PackedScene = preload("res://scenes/characters/Player.tscn")
 
 var active_character
-signal creatures_organized
+
+signal battle_start
 
 static func sort_creatures_by_speed(a : Creature, b : Creature) -> bool:
 	return a.speed > b.speed
@@ -35,6 +36,13 @@ func spawn_creatures() -> void:
 		yield(get_tree().create_timer(0.3), "timeout")
 		c.visible = true
 
+func play_turn():
+	active_character.is_active = true
+	yield(active_character.play_turn(), "completed")
+	var new_index : int = (active_character.get_index() + 1) % $Creatures.get_child_count()
+	active_character = $Creatures.get_child(new_index)
+	play_turn()
+
 func _ready() -> void:
 	
 	var skel1 = SKELETON_SCENE.instance()
@@ -52,13 +60,8 @@ func _ready() -> void:
 	set_positions()
 	spawn_creatures()
 	active_character = $Creatures.get_child(0)
+	emit_signal("battle_start")
 
-func play_turn() -> void:
-	yield(active_character.play_turn(), "completed")
-	var new_index : int = (active_character.get_index() + 1) % $Creatures.get_child_count()
-	print(new_index)
-	active_character = $Creatures.get_child(new_index)
 
-func _process(delta) -> void:
+func _on_BattleMap_battle_start():
 	play_turn()
-	yield(play_turn(), "completed")

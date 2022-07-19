@@ -34,3 +34,4 @@ position = Vector2( 64, -32 )
 
 [node name="EnemyPosition4" type="Position2D" parent="EnemiesPos"]
 position = Vector2( 32, 0 )
+[connection signal="battle_start" from="." to="." method="_on_BattleMap_battle_start"]
