@@ -4,6 +4,7 @@ class_name Creature
 
 const FLOATING_NUMBER: PackedScene = preload("res://scenes/floating_number/FloatingNumber.tscn")
 const TARGET_SYMBOL: PackedScene = preload("res://scenes/battleicons/AttackSymbol.tscn")
+
 export(int) var speed: int = 5
 export(bool) var is_enemy: bool = true
 
@@ -24,13 +25,32 @@ func _ready() -> void:
 	
 	$AnimationPlayer.play("idle")
 
+func play_turn():
+	yield(self, "action_taken")
+
+func attack(target):
+	$AnimationPlayer.play("attack")
+	is_active = false
+	yield($AnimationPlayer, "animation_finished")
+	$AnimationPlayer.play("idle")
+	
+	target.take_damage(37)
+
+func take_damage(damage):
+	var damageLabel = FLOATING_NUMBER.instance()
+	damageLabel.ammount = damage
+	add_child(damageLabel)
+	$AnimationPlayer.play("hit")
+	yield($AnimationPlayer, "animation_finished")
+	$AnimationPlayer.play("idle")
+
+func _on_Area2D_mouse_entered():
+	mouse_over = true
+
+func _on_Area2D_mouse_exited():
+	mouse_over = false
+
 func _input(event):
-	
-	if Input.is_action_pressed("ui_select") and is_active == true:
-		$AnimationPlayer.play("attack")
-		is_active = false
-		emit_signal("action_taken")
-	
 	if mouse_over and event.is_pressed() and event.button_index == BUTTON_LEFT:
 		for creatures in get_parent().get_children():
 			for c in creatures.get_children():
@@ -41,25 +61,4 @@ func _input(event):
 		add_child(tgt_symb)
 		tgt_symb.position.y = tgt_symb.position.y + 32
 		emit_signal("current_target", self)
-	
-	yield($AnimationPlayer, "animation_finished")
-	$AnimationPlayer.play("idle")
-
-func play_turn():
-	yield(self, "action_taken")
-	
-
-func take_damage(damage):
-	var damageLabel = FLOATING_NUMBER.instance()
-	damageLabel.ammount = damage
-	add_child(damageLabel)
-	$AnimationPlayer.play("hit")
-	yield($AnimationPlayer, "animation_finished")
-
-func _on_Area2D_mouse_entered():
-	mouse_over = true
-
-func _on_Area2D_mouse_exited():
-	mouse_over = false
-	
 

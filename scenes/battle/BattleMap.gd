@@ -13,15 +13,17 @@ signal battle_start
 static func sort_creatures_by_speed(a : Creature, b : Creature) -> bool:
 	return a.speed > b.speed
 
-func set_positions() -> void:
+func on_current_target(t):
+	current_target = t
+
+func set_positions():
 	var creatures = $Creatures.get_children()
 	var n_allies = 0
 	var n_enemies = 0
 	
 	creatures.sort_custom(self, 'sort_creatures_by_speed')
 	for c in creatures:
-		c.connect("action_taken", self, "on_action_taken")
-		c.connect("current_target", self, "set_current_target")
+		c.connect("current_target", self, "on_current_target")
 		
 		c.raise()
 		
@@ -33,26 +35,13 @@ func set_positions() -> void:
 			c.position = $AlliesPos.get_child(n_allies).position
 			n_allies = n_allies + 1
 
-func on_action_taken():
-	yield(get_tree().create_timer(1), "timeout")
-	current_target.take_damage(37)
-
-func set_current_target(t):
-	current_target = t
-
 func spawn_creatures() -> void:
 	for c in $Creatures.get_children():
-		yield(get_tree().create_timer(0.3), "timeout")
+		yield(get_tree().create_timer(0.2), "timeout")
 		c.visible = true
 
-func play_turn():
-	active_character.is_active = true
-	yield(active_character.play_turn(), "completed")
-	var new_index : int = (active_character.get_index() + 1) % $Creatures.get_child_count()
-	active_character = $Creatures.get_child(new_index)
-	play_turn()
-
 func _ready() -> void:
+	$ActionBar.connect("turn_ended", self, "on_turn_ended")
 	
 	var skel1 = SKELETON_SCENE.instance()
 	var skel2 = SKELETON_SCENE.instance()
@@ -71,6 +60,18 @@ func _ready() -> void:
 	active_character = $Creatures.get_child(0)
 	emit_signal("battle_start")
 
-
 func _on_BattleMap_battle_start():
+	play_turn()
+
+func on_turn_ended():
+	next_turn()
+
+func play_turn():
+	active_character.is_active = true
+	yield(active_character.play_turn(), "completed")
+
+
+func next_turn():
+	var new_index : int = (active_character.get_index() + 1) % $Creatures.get_child_count()
+	active_character = $Creatures.get_child(new_index)
 	play_turn()
