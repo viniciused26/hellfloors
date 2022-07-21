@@ -6,6 +6,7 @@ const SKELETON_SCENE: PackedScene = preload("res://scenes/characters/Skeleton.ts
 const PLAYER_SCENE: PackedScene = preload("res://scenes/characters/Player.tscn")
 
 var active_character
+var current_target
 
 signal battle_start
 
@@ -18,11 +19,12 @@ func set_positions() -> void:
 	var n_enemies = 0
 	
 	creatures.sort_custom(self, 'sort_creatures_by_speed')
-	
 	for c in creatures:
+		c.connect("action_taken", self, "on_action_taken")
+		c.connect("current_target", self, "set_current_target")
+		
 		c.raise()
-	
-	for c in creatures:
+		
 		c.visible = false
 		if c.is_enemy == true:
 			c.position = $EnemiesPos.get_child(n_enemies).position
@@ -30,6 +32,13 @@ func set_positions() -> void:
 		else:
 			c.position = $AlliesPos.get_child(n_allies).position
 			n_allies = n_allies + 1
+
+func on_action_taken():
+	yield(get_tree().create_timer(1), "timeout")
+	current_target.take_damage(37)
+
+func set_current_target(t):
+	current_target = t
 
 func spawn_creatures() -> void:
 	for c in $Creatures.get_children():
