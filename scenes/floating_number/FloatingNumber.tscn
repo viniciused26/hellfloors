@@ -22,8 +22,8 @@ margin_left = -25.0
 margin_top = -10.0
 margin_right = 25.0
 margin_bottom = 10.0
-custom_colors/font_color = Color( 0.741176, 0.180392, 0.180392, 1 )
 custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.741176, 0.180392, 0.180392, 1 )
 text = "200"
 align = 1
 valign = 1
@@ -32,5 +32,4 @@ __meta__ = {
 }
 
 [node name="Tween" type="Tween" parent="."]
-
 [connection signal="tween_all_completed" from="Tween" to="." method="_on_Tween_tween_all_completed"]
