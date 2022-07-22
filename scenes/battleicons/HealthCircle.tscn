@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/icons/healthbar/health_over.png" type="Texture" id=1]
+[ext_resource path="res://assets/icons/healthbar/health_full.png" type="Texture" id=2]
+
+[node name="HealthCircle" type="Node2D"]
+
+[node name="TextureProgress" type="TextureProgress" parent="."]
+margin_left = -16.0
+margin_top = -16.0
+margin_right = 16.0
+margin_bottom = 16.0
+value = 50.0
+texture_under = ExtResource( 1 )
+texture_progress = ExtResource( 2 )
+fill_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
