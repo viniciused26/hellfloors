@@ -6,9 +6,8 @@
 [node name="Player" instance=ExtResource( 1 )]
 is_enemy = false
 speed = 8
+damage = 25
+title = "paladin"
 
 [node name="Sprite" parent="." index="0"]
 texture = ExtResource( 2 )
-
-[node name="AnimationPlayer" parent="." index="1"]
-playback_speed = 10.0

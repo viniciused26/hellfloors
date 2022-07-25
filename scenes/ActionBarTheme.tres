@@ -1,0 +1,45 @@
+[gd_resource type="Theme" load_steps=13 format=2]
+
+[ext_resource path="res://assets/fonts/magofonts/mago3.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://assets/icons/Cryo's Mini GUI (1)/button.png" type="Texture" id=2]
+[ext_resource path="res://assets/icons/Cryo's Mini GUI (1)/button2.png" type="Texture" id=3]
+[ext_resource path="res://assets/icons/Cryo's Mini GUI (1)/pannel.png" type="Texture" id=4]
+
+[sub_resource type="DynamicFont" id=8]
+size = 20
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxEmpty" id=7]
+
+[sub_resource type="StyleBoxTexture" id=5]
+texture = ExtResource( 2 )
+region_rect = Rect2( 0, 0, 128, 64 )
+
+[sub_resource type="StyleBoxTexture" id=2]
+texture = ExtResource( 2 )
+region_rect = Rect2( 0, 0, 128, 64 )
+
+[sub_resource type="StyleBoxTexture" id=6]
+texture = ExtResource( 3 )
+region_rect = Rect2( 0, 0, 128, 64 )
+
+[sub_resource type="DynamicFont" id=11]
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxTexture" id=9]
+texture = ExtResource( 4 )
+region_rect = Rect2( 0, 0, 192, 96 )
+
+[sub_resource type="DynamicFont" id=10]
+size = 12
+font_data = ExtResource( 1 )
+
+[resource]
+Button/fonts/font = SubResource( 8 )
+Button/styles/focus = SubResource( 7 )
+Button/styles/hover = SubResource( 5 )
+Button/styles/normal = SubResource( 2 )
+Button/styles/pressed = SubResource( 6 )
+Label/fonts/font = SubResource( 11 )
+Panel/styles/panel = SubResource( 9 )
+RichTextLabel/fonts/normal_font = SubResource( 10 )

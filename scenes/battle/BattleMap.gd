@@ -5,27 +5,51 @@ class_name BattleMap
 const SKELETON_SCENE: PackedScene = preload("res://scenes/characters/Skeleton.tscn")
 const PLAYER_SCENE: PackedScene = preload("res://scenes/characters/Player.tscn")
 
+
 var active_character
-var current_target
+var current_target = null
+
 var n_rounds = 0
+var n_allies = 0
+var n_enemies = 0
 
 signal battle_start
 signal new_round
+signal all_enemies_dead
+signal set_text_alert
+signal new_turn
 
 static func sort_creatures_by_speed(a : Creature, b : Creature) -> bool:
 	return a.speed > b.speed
 
 func on_current_target(t):
+	if current_target != null:
+		if weakref(current_target).get_ref():
+			current_target.remove_tgt_symbol()
+	
 	current_target = t
+	current_target.add_tgt_symbol()
+
+func on_creature_died(t):
+	if t.is_enemy == true:
+		n_enemies -= 1
+	else:
+		n_allies -= 1
+	
+	if n_enemies == 0:
+		emit_signal("all_enemies_dead")
+
+func received_text_alert(t):
+	emit_signal("set_text_alert", t)
 
 func set_positions():
 	var creatures = $Creatures.get_children()
-	var n_allies = 0
-	var n_enemies = 0
 	
 	creatures.sort_custom(self, 'sort_creatures_by_speed')
 	for c in creatures:
 		c.connect("current_target", self, "on_current_target")
+		c.connect("died", self, "on_creature_died")
+		c.connect("text_alert", self, "received_text_alert")
 		
 		c.raise()
 		
@@ -64,6 +88,7 @@ func _ready() -> void:
 	set_positions()
 	spawn_creatures()
 	active_character = $Creatures.get_child(0)
+	yield(spawn_creatures(), "completed")
 	emit_signal("battle_start")
 	
 	n_rounds += 1
@@ -73,9 +98,12 @@ func _on_BattleMap_battle_start():
 	play_turn()
 
 func on_turn_ended():
+	active_character.is_active = false
+	active_character.anim_player.play("idle")
 	next_turn()
 
 func play_turn():
+	emit_signal("new_turn", active_character)
 	active_character.is_active = true
 	yield(active_character.play_turn(), "completed")
 
@@ -85,6 +113,15 @@ func next_turn():
 	
 	if new_index == 0:
 		n_rounds += 1
+		new_round()
 		emit_signal("new_round", n_rounds)
 	
 	play_turn()
+
+func new_round():
+	for c in $Creatures.get_children():
+		c.round_end()
+
+
+func _on_ActionBar_text_alert(t):
+	received_text_alert(t)

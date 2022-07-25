@@ -17,7 +17,7 @@ position = Vector2( 384, 192 )
 texture = ExtResource( 2 )
 
 [node name="BattleMap" parent="." instance=ExtResource( 1 )]
-position = Vector2( 384, 192 )
+position = Vector2( 384, 128 )
 
 [node name="Label" type="Label" parent="."]
 visible = false
@@ -34,4 +34,5 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[connection signal="all_enemies_dead" from="BattleMap" to="." method="_on_BattleMap_all_enemies_dead"]
 [connection signal="new_round" from="BattleMap" to="." method="_on_BattleMap_new_round"]
