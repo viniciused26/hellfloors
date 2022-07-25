@@ -64,15 +64,6 @@ func _on_BattleMap_battle_start():
 	play_turn()
 
 func on_turn_ended():
-	if current_target != null:
-		for c in current_target.get_children():
-			if c.name == "AttackSymbol":
-				c.queue_free()
-			if c.name == "HealthCircle":
-				c.visible = false
-	
-	current_target = null
-	
 	next_turn()
 
 func play_turn():

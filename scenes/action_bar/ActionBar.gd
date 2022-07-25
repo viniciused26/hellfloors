@@ -17,6 +17,6 @@ func _on_AttackButton_pressed():
 	else:
 		if active_character.action_points > 0:
 			active_character.attack(current_target)
-			active_character.action_points -= 1
+			
 		else:
 			print("no points")

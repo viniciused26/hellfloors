@@ -29,13 +29,7 @@ func _ready() -> void:
 	hp_circle.position = Vector2(position.x - 20, position.y + 12)
 	hp_circle.visible = false
 	
-	$IdleSprite.flip_h = is_enemy
-	$AttackSprite.flip_h = is_enemy
-	$HitSprite.flip_h = is_enemy
-	
-	if is_enemy:
-		$AttackSprite.position.x = $AttackSprite.position.x - 13
-		$HitSprite.position.x = $HitSprite.position.x + 6
+	$Sprite.flip_h = is_enemy
 	
 	$AnimationPlayer.play("idle")
 
@@ -43,12 +37,16 @@ func play_turn():
 	yield(self, "action_taken")
 
 func attack(target):
-	$AnimationPlayer.play("attack")
-	is_active = false
-	yield($AnimationPlayer, "animation_finished")
-	$AnimationPlayer.play("idle")
-	
-	target.take_damage(damage)
+	if target == self:
+		print("cannot attack yourself!")
+	else:
+		$AnimationPlayer.play("attack")
+		is_active = false
+		yield($AnimationPlayer, "animation_finished")
+		$AnimationPlayer.play("idle")
+		
+		target.take_damage(damage)
+		action_points -= 1
 
 func take_damage(damage):
 	var damageLabel = FLOATING_NUMBER.instance()
@@ -58,9 +56,10 @@ func take_damage(damage):
 	yield($AnimationPlayer, "animation_finished")
 	$AnimationPlayer.play("idle")
 	health -= damage
-	emit_signal("health_changed", health)
 	
+	yield(hp_circle.on_health_changed(health), "completed")
 	if health <= 0:
+		emit_signal("died")
 		self.queue_free()
 
 func _on_Area2D_input_event(viewport, event, shape_idx):
@@ -78,5 +77,5 @@ func _on_Area2D_input_event(viewport, event, shape_idx):
 		
 		var tgt_symb = TARGET_SYMBOL.instance()
 		add_child(tgt_symb)
-		tgt_symb.position.y = tgt_symb.position.y + 32
+		tgt_symb.position.y = tgt_symb.position.y - ($Sprite.texture.get_height()/2) - 8
 		emit_signal("current_target", self)

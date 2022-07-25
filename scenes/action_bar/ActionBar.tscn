@@ -29,5 +29,6 @@ text = "Attack"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="pressed" from="EndTurnButton" to="." method="_on_EndTurnButton_pressed"]
 [connection signal="pressed" from="AttackButton" to="." method="_on_AttackButton_pressed"]

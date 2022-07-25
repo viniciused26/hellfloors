@@ -5,7 +5,7 @@
 [ext_resource path="res://scenes/battleicons/HealthCircle.gd" type="Script" id=3]
 
 [node name="HealthCircle" type="Node2D"]
-scale = Vector2( 0.4, 0.4 )
+scale = Vector2( 0.7, 0.7 )
 script = ExtResource( 3 )
 
 [node name="TextureProgress" type="TextureProgress" parent="."]
@@ -16,7 +16,7 @@ margin_bottom = 16.0
 value = 50.0
 texture_under = ExtResource( 1 )
 texture_progress = ExtResource( 2 )
-fill_mode = 5
+tint_progress = Color( 0.560784, 0.215686, 0.215686, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
