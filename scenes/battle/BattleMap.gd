@@ -7,8 +7,10 @@ const PLAYER_SCENE: PackedScene = preload("res://scenes/characters/Player.tscn")
 
 var active_character
 var current_target
+var n_rounds = 0
 
 signal battle_start
+signal new_round
 
 static func sort_creatures_by_speed(a : Creature, b : Creature) -> bool:
 	return a.speed > b.speed
@@ -63,6 +65,9 @@ func _ready() -> void:
 	spawn_creatures()
 	active_character = $Creatures.get_child(0)
 	emit_signal("battle_start")
+	
+	n_rounds += 1
+	emit_signal("new_round", n_rounds)
 
 func _on_BattleMap_battle_start():
 	play_turn()
@@ -74,8 +79,12 @@ func play_turn():
 	active_character.is_active = true
 	yield(active_character.play_turn(), "completed")
 
-
 func next_turn():
 	var new_index : int = (active_character.get_index() + 1) % $Creatures.get_child_count()
 	active_character = $Creatures.get_child(new_index)
+	
+	if new_index == 0:
+		n_rounds += 1
+		emit_signal("new_round", n_rounds)
+	
 	play_turn()
