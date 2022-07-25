@@ -6,6 +6,8 @@ const FLOATING_NUMBER: PackedScene = preload("res://scenes/floating_number/Float
 const TARGET_SYMBOL: PackedScene = preload("res://scenes/battleicons/AttackSymbol.tscn")
 const HEALTH_CIRCLE: PackedScene = preload("res://scenes/battleicons/HealthCircle.tscn")
 
+onready var sprite = $Sprite
+
 export var is_enemy: bool = true
 
 export var speed : int = 5
@@ -24,14 +26,12 @@ signal current_target
 signal health_changed
 
 func _ready() -> void:
+	$Sprite.flip_h = is_enemy
+	$AnimationPlayer.play("idle")
+	
 	hp_circle = HEALTH_CIRCLE.instance()
 	add_child(hp_circle)
-	hp_circle.position = Vector2(position.x - 20, position.y + 12)
-	hp_circle.visible = false
-	
-	$Sprite.flip_h = is_enemy
-	
-	$AnimationPlayer.play("idle")
+	hp_circle.position = Vector2(position.x, position.y + (sprite.texture.get_height()/2) + 14)
 
 func play_turn():
 	yield(self, "action_taken")
@@ -57,7 +57,7 @@ func take_damage(damage):
 	$AnimationPlayer.play("idle")
 	health -= damage
 	
-	yield(hp_circle.on_health_changed(health), "completed")
+	yield(hp_circle.on_health_changed(health, 0.5), "completed")
 	if health <= 0:
 		emit_signal("died")
 		self.queue_free()
@@ -68,14 +68,11 @@ func _on_Area2D_input_event(viewport, event, shape_idx):
 				for c in creatures.get_children():
 					if c.name == "AttackSymbol":
 						c.queue_free()
-					if c.name == "HealthCircle":
-						c.visible = false
-		
-		for c in get_children():
-			if c.name == "HealthCircle":
-				c.visible = true
 		
 		var tgt_symb = TARGET_SYMBOL.instance()
 		add_child(tgt_symb)
-		tgt_symb.position.y = tgt_symb.position.y - ($Sprite.texture.get_height()/2) - 8
+		tgt_symb.position.y = tgt_symb.position.y - (sprite.texture.get_height()/2) - 8
 		emit_signal("current_target", self)
+
+func add_healthbar():
+	yield(hp_circle.on_health_changed(health, 1), "completed")

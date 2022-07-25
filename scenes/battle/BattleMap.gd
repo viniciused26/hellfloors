@@ -35,10 +35,14 @@ func set_positions():
 			c.position = $AlliesPos.get_child(n_allies).position
 			n_allies = n_allies + 1
 
-func spawn_creatures() -> void:
+func spawn_creatures():
+	yield(get_tree().create_timer(0.3), "timeout")
 	for c in $Creatures.get_children():
 		yield(get_tree().create_timer(0.2), "timeout")
 		c.visible = true
+	
+	for c in $Creatures.get_children():
+		c.add_healthbar()
 
 func _ready() -> void:
 	$ActionBar.connect("turn_ended", self, "on_turn_ended")

@@ -38,4 +38,5 @@ position = Vector2( 32, 0 )
 
 [node name="ActionBar" parent="." instance=ExtResource( 2 )]
 position = Vector2( -32, 144 )
+
 [connection signal="battle_start" from="." to="." method="_on_BattleMap_battle_start"]
